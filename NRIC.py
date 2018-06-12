@@ -26,33 +26,32 @@ class Nric(object):
 
 	def random(self, prefix = ''):
 		import random
-		self.nric = ''
+		nric = ''
 		if not prefix:
 			prefix = random.choice(['S', 'T']) 
-		while len(self.nric) < 7:
-			self.nric += str(random.randint(0,9))
-		self.nric_digits = self.nric[0:7]
-		self.checksum_digit = self.calculate_checksum(self.nric_digits)
-		self.suffix = self.lookup_table(prefix, self.checksum_digit)
-		self.full_valid_nric = prefix + self.nric_digits + self.suffix
-		return self.full_valid_nric
+		while len(nric) < 7:
+			nric += str(random.randint(0,9))
+		nric_digits = nric[0:7]
+		checksum_digit = self.calculate_checksum(nric_digits)
+		suffix = self.lookup_table(prefix, checksum_digit)
+		full_valid_nric = prefix + nric_digits + suffix
+		return full_valid_nric
 	
 	def calculate_checksum(self, nric_digits):
-		self.sum = 0
-		self.weights = [ 2, 7, 6, 5, 4, 3, 2 ]
+		sum = 0
+		weights = [ 2, 7, 6, 5, 4, 3, 2 ]
 
-		for i, k in zip(self.weights, nric_digits):
-			self.sum += i * int(k)
+		for i, k in zip(weights, nric_digits):
+			sum += i * int(k)
 		
-		self.checksum_digit = self.sum % 11
-		return self.checksum_digit
+		checksum_digit = sum % 11
+		return checksum_digit
 		
 	def lookup_table(self, prefix, checksum_digit):
 		if prefix in ['S', 's']:
-			self.table = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Z', 'J' ]
+			table = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'Z', 'J' ]
 		elif prefix in ['T', 't']:
-			self.table = [ 'H', 'I', 'Z', 'J', 'A', 'B', 'C', 'D', 'E', 'F', 'G' ]
+			table = [ 'H', 'I', 'Z', 'J', 'A', 'B', 'C', 'D', 'E', 'F', 'G' ]
 
-		self.checksum_alphabet = self.table[10 - checksum_digit]
-		return self.checksum_alphabet
-
+		checksum_alphabet = table[10 - checksum_digit]
+		return checksum_alphabet
